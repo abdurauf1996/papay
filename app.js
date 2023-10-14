@@ -1,10 +1,7 @@
 console.log("Web Serverni  boshlash");
 const express = require("express");
 const app = express();
-const router = require("./router");
-//MongoDB  choqrish
-const db = require("./server").db();
-const mongodb = require("mongodb");
+const router = require("./router.js");
 
 //1KIRISH CODE
 
