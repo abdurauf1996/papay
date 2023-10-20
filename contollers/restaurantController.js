@@ -7,7 +7,7 @@ restaurantController.getSignupMyRestaurant = async (req, res) => {
     console.log("GET: cont/getSignupMyRestaurant");
     res.render("signup");
   } catch (err) {
-    console.log(`ERROR,cont/getSignupMyRestaurant ${err.message}`);
+    console.log(`ERROR,cont/getSignupMyRestaurant, ${err.message}`);
     res.json({ state: "fail", message: err.message });
   }
 };
