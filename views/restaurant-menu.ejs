@@ -1,0 +1,16 @@
+<%- include('includes/header') %>
+<body>
+  <h1>My restaurant page</h1>
+
+  <% if (!member){ %>
+
+  <h2>siz authenticated emassiz</h2>
+  <% } else {%>
+
+  <h1>
+    Siz authendicated bolganiz,va sizning nickngiz <% member.mb_nick%>
+    <p>sizning telefongiz <%member.nb_phone%></p>
+  </h1>
+  <% } %>
+</body>
+<%- include('includes/footer') %>
