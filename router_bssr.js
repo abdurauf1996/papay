@@ -2,6 +2,7 @@ const express = require("express");
 const router_bssr = express.Router();
 const restaurantController = require("./contollers/restaurantController");
 const productController = require("./contollers/productController");
+const { uploadProductImage } = require("./utils/upload-multer");
 //onst { updateDocuments } = require("mongodb/lib/operations/common_functions");
 //const { router } = require("./app");
 
@@ -23,6 +24,7 @@ router_bssr.get("/products/menu", restaurantController.getMyRestaurantData);
 router_bssr.post(
   "/products/create",
   restaurantController.validateAuthRestaurant,
+  uploadProductImage.single("product_image"),
   productController.addNewProduct
 );
 router_bssr.post("products/edit/:id", productController.updateChosenProduct);
