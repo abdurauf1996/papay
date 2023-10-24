@@ -57,7 +57,7 @@ restaurantController.loginProcess = async (req, res) => {
       member = new Member(),
       result = await member.loginData(data);
 
-    res.session.member = result;
+    req.session.member = result;
 
     req.session.save(function () {
       res.redirect("/resto/products/menu");
