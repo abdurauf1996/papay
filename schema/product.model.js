@@ -1,10 +1,12 @@
 const mongoose = require("mongoose");
+
 const {
   product_collection_enums,
-  member_type_enums,
   product_status_enums,
   product_size_enums,
+  product_volume_enums,
 } = require("../lib/config");
+
 const Schema = mongoose.Schema;
 
 const productSchema = new mongoose.Schema(
@@ -15,7 +17,7 @@ const productSchema = new mongoose.Schema(
       required: true,
       enum: {
         values: product_collection_enums,
-        message: "{VALUE} is not among permitted enum values",
+        message: "{value} is not among permitted enum values",
       },
     },
     product_status: {
@@ -24,7 +26,7 @@ const productSchema = new mongoose.Schema(
       default: "PAUSED",
       enum: {
         values: product_status_enums,
-        message: "{VALUE} is not among permitted enum values",
+        message: "{value} is not among permitted enum values",
       },
     },
     product_price: {
@@ -47,10 +49,9 @@ const productSchema = new mongoose.Schema(
         const sized_list = ["dish", "salad", "dessert"];
         return sized_list.includes(this.product_collection);
       },
-
       enum: {
         values: product_size_enums,
-        message: "{VALUE} is not among permitted enum values",
+        message: "{value} is not among permitted enum values",
       },
     },
     product_volume: {
@@ -59,23 +60,20 @@ const productSchema = new mongoose.Schema(
       required: function () {
         return this.product_collection === "drink";
       },
-
       enum: {
-        values: product_size_enums,
-        message: "{VALUE} is not among permitted enum values",
+        values: product_volume_enums,
+        message: "{value} is not among permitted enum values",
       },
     },
     product_description: {
       type: String,
       required: true,
     },
-
     product_images: {
       type: Array,
       required: false,
       default: [],
     },
-
     product_likes: {
       type: Number,
       required: false,
@@ -92,11 +90,16 @@ const productSchema = new mongoose.Schema(
       required: false,
     },
   },
-  { timesttamps: true }
-); //createAt, updateAt;
+  { timestamps: true } // createdAt &&& updatedAt
+);
 
 productSchema.index(
-  { restaurant_mb_id: 1, product_name: 1, product_size: 1 },
+  {
+    restaurant_mb_id: 1,
+    product_name: 1,
+    product_size: 1,
+    product_volume: 1,
+  }, // Texas-De-Brazilcoca-colanull?
   { unique: true }
 );
 

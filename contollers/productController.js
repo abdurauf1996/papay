@@ -2,7 +2,6 @@ const Product = require("../models/Product");
 const assert = require("assert");
 
 const Definer = require("../lib/mistake");
-const { Script } = require("vm");
 
 let productController = module.exports;
 
@@ -10,7 +9,7 @@ productController.getAllProducts = async (req, res) => {
   try {
     console.log("GET: cont/getAllProducts");
   } catch (err) {
-    console.log(`ERROR,cont/getAllProducts, ${err.message}`);
+    console.log(`ERROR, cont/getAllProducts, ${err.message}`);
     res.json({ state: "fail", message: err.message });
   }
 };
@@ -29,8 +28,9 @@ productController.addNewProduct = async (req, res) => {
     const result = await product.addNewProductData(data, req.member);
 
     const html = `<script>
-    alert(new dusg added successfully);
-    window.location.replase('/resto/products/menu')</script>`;
+    alert(new dish added successfully);
+    window.location.replace("/resto/products/menu")
+  </script>`;
     res.end(html);
   } catch (err) {
     console.log(`ERROR,cont/addNewProduct, ${err.message}`);
@@ -39,7 +39,19 @@ productController.addNewProduct = async (req, res) => {
 productController.updateChosenProduct = async (req, res) => {
   try {
     console.log("POST: cont/updateChosenProduct");
+
+    const product = new Product();
+    const id = req.params.id;
+    const result = await product.updateChosenProductData(
+      id,
+      req.body,
+      req.member._id
+    );
+
+    await res.json({ state: "sucess", data: result });
   } catch (err) {
     console.log(`ERROR,cont/updateChosenProduct, ${err.message}`);
+
+    res.json({ state: "fail", message: err.message });
   }
 };
