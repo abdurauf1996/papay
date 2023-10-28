@@ -1,16 +1,20 @@
 //const session = require("express-session");
 const Member = require("../models/Meber");
+const Product = require("../models/Product");
 
 let restaurantController = module.exports;
 
-restaurantController.getMyRestaurantData = async (req, res) => {
+restaurantController.getMyRestauranProducts = async (req, res) => {
   try {
-    console.log("GET: cont/getMyRestaurantData");
+    console.log("GET: cont/getMyRestauranProducts");
 
     // TODO: Get my restaurant products
-    res.render("restaurant-menu");
+    const product = new Product();
+    const data = await product.getAllProductsDataResto(res.locals.member);
+
+    res.render("restaurant-menu", { restaurant_data: data });
   } catch (err) {
-    console.log(`ERROR,cont/getMyRestaurantData, ${err.message}`);
+    console.log(`ERROR,cont/getMyRestauranProducts, ${err.message}`);
     res.json({ state: "fail", message: err.message });
   }
 };
