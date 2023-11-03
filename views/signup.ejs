@@ -1,7 +1,8 @@
 <%- include('includes/header') %>
-<link rel="stylesheet" href="/CSS/login.css" type="text/css" />
+<link rel="stylesheet" href="/css/login.css" type="text/css" />
 <body>
   <form
+    onsubmit="return validateSignUpForm()"
     class="login_container"
     method="POST"
     action="/resto/sign-up"
@@ -27,6 +28,7 @@
           <input
             type="text"
             name="mb_nick"
+            class="mb_nick"
             placeholder="Foydalanuvchining ismi"
             value=""
             required
@@ -38,6 +40,7 @@
           <input
             type="text"
             name="mb_phone"
+            class="mb_phone"
             placeholder="Telefon raqam"
             value=""
             required
@@ -52,6 +55,7 @@
           <input
             type="password"
             name="mb_password"
+            class="mb_password"
             placeholder="Passwordni kiriting"
             value=""
             required
@@ -59,10 +63,11 @@
         </div>
 
         <div class="sign_up_frame">
-          <label>Passwordni qayta kiriting</label>
+          <label>Passwordni tasdiqlash</label>
           <input
             type="password"
             name="mb_confirm_password"
+            class="mb_confirm_password"
             placeholder="Passwordni tasdiqlash"
             value=""
             required
@@ -73,11 +78,7 @@
 
       <div class="login_input_frame">
         <div class="media-frame">
-          <img
-            src="/images/default_resto.jpeg"
-            class="upload_img_frame"
-            alt="image"
-          />
+          <img class="upload_img_frame" src="/images/default_resto.jpeg" />
           <div class="upload_container">
             <span class="media_text">Taom rasmi</span>
             <div class="filebox bs3-primary preview-image">
@@ -86,12 +87,12 @@
                 value="Rasmni tanlang"
                 disabled="disabled"
               />
-              <label for="input_file">Rasmni Yuklash</label>
+              <label for="input_file">Rasmn Yuklash</label>
               <input
-                class="upload-hidden form-control-file restaurant_img"
                 type="file"
                 id="input_file"
                 name="restaurant_img"
+                class="upload-hidden form-control-file restaurant_img"
               />
             </div>
             <p class="thumbnail_desc">
@@ -107,5 +108,56 @@
       </button>
     </div>
   </form>
+  <script>
+    $(function () {
+      let fileTarget = $(".filebox .upload-hidden");
+      let filename = "";
+      fileTarget.on("change", function () {
+        if (window.FileReader) {
+          const uploading_file = $(this)[0].files[0];
+          const fileType = uploading_file["type"];
+          const validImageTypes = ["image/jpg", "image/jpeg", "image/png"];
+          if (!validImageTypes.includes(fileType)) {
+            alert(
+              "Iltimos ruhsat etilgan formatdagi rasmlarni yuklang: jpg, jpeg va png!"
+            );
+          } else {
+            if (uploading_file) {
+              console.log(URL.createObjectURL(uploading_file));
+              $(".upload_img_frame")
+                .attr("src", URL.createObjectURL(uploading_file))
+                .addClass("success");
+            }
+            filename = uploading_file.name;
+          }
+        }
+        $(this).siblings(".upload-name").val(filename);
+      });
+    });
+    function validateSignUpForm() {
+      const mb_nick = $(".mb_nick").val();
+      const mb_password = $(".mb_password").val();
+      const mb_phone = $(".mb_phone").val();
+      const mb_confirm_password = $(".mb_confirm_password").val();
+      const restaurant_img = $(".restaurant_img").get(0).files[0] ?? null;
+      if (
+        mb_nick == "" ||
+        mb_password == "" ||
+        mb_phone == "" ||
+        mb_confirm_password == ""
+      ) {
+        alert("Iltimos hamma ma'lumotlarni to'ldiring!");
+        return false;
+      } else if (mb_password !== mb_confirm_password) {
+        alert(`iltimos passwordni to'g'ri kiriting!`);
+        return false;
+      }
+      if (!restaurant_img) {
+        alert("Iltimos rasmni yuklang!");
+        return false;
+      }
+      return true;
+    }
+  </script>
 </body>
 <%- include('includes/footer') %>
