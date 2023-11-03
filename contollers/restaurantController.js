@@ -18,7 +18,6 @@ restaurantController.home = (req, res) => {
 restaurantController.getMyRestauranProducts = async (req, res) => {
   try {
     console.log("GET: cont/getMyRestauranProducts");
-
     // TODO: Get my restaurant products
     const product = new Product();
     const data = await product.getAllProductsDataResto(res.locals.member);
@@ -29,7 +28,6 @@ restaurantController.getMyRestauranProducts = async (req, res) => {
     res.json({ state: "fail", message: err.message });
   }
 };
-
 restaurantController.getSignupMyRestaurant = async (req, res) => {
   try {
     console.log("GET: cont/getSignupMyRestaurant");
@@ -93,10 +91,22 @@ restaurantController.loginProcess = async (req, res) => {
   }
 };
 
+// *********Logout *********//
+
 restaurantController.logout = (req, res) => {
-  console.log("GET cont.logout");
-  res.send("logout sahifadasiz");
+  try {
+    console.log("GET cont/logout");
+    req.session.destroy(function () {
+      res.redirect("/resto");
+    });
+  } catch (err) {
+    console.log(`ERROR, cont/logout, ${err.message}`);
+    res.json({ state: "fail", message: err.message });
+  }
 };
+
+/******************************************************* */
+
 restaurantController.validateAuthRestaurant = (req, res, next) => {
   if (req.session?.member?.mb_type === "RESTAURANT") {
     req.member = req.session.member;
@@ -104,10 +114,10 @@ restaurantController.validateAuthRestaurant = (req, res, next) => {
   } else
     res.json({
       state: "fail",
-      error: "only authenticated member with retaurant type",
+      message: "only authenticated member with retaurant type",
     });
 };
-
+//**************************** */
 restaurantController.checkSessions = (req, res) => {
   if (req.session?.member) {
     res.json({ state: "succeed", data: req.session.member });
