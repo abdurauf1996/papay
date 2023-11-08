@@ -1,4 +1,4 @@
-.body {
+body {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -10,11 +10,12 @@
 
 .group_name {
   position: absolute;
-  z-index: 10000;
+  z-index: 1000;
   top: 1%;
-  color: #efefef;
-  font-size: xx-large;
+  color: #efefee;
+  font-size: x-large;
   font-family: monospace;
+  margin-bottom: 50px;
 }
 .animation-wrapper {
   width: 50%;
@@ -23,7 +24,7 @@
 
 .sphere-animation {
   position: absolute;
-  top: 50%;
+  top: 60%;
   left: 50%;
   width: 580px;
   height: 580px;

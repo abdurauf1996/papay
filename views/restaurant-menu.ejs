@@ -153,6 +153,7 @@
   
              $(".product_collection").on("change", ()=>{
                  const selected = $(".product_collection").val();
+                 console.log(selected)
                  if(selected === "drink"){
                      $("#product_volume").show();
                      $("#product_size").hide();
