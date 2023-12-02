@@ -97,7 +97,7 @@ memberController.getChosenMember = async (req, res) => {
 
     res.json({ state: "succeed", data: result });
   } catch (err) {
-    console.log(`ERROR, cont/getChosenMember,${err.message}`);
+    console.log(`ERROR, cont/getChosenMember, ${err.message}`);
     res.json({ state: "fail", message: err.message });
   }
 };
