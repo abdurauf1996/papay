@@ -1,9 +1,11 @@
 const ViewModel = require("../schema/view.model");
+const MemberModel = require("../schema/member.model");
 
 class View {
   constructor(mb_id) {
     this.viewModel = ViewModel;
-    this.memberModel = this.memberModel;
+    this.memberModel = MemberModel;
+
     this.mb_id = mb_id;
   }
   async validateChosenTarget(view_ref_id, group_type) {
@@ -12,7 +14,7 @@ class View {
       switch (group_type) {
         case "member":
           result = await this.memberModel
-            .findById({
+            .findOne({
               _id: view_ref_id,
               mb_status: "ACTIVE",
             })
@@ -26,13 +28,13 @@ class View {
   }
   async insertMemberView(view_ref_id, group_type) {
     try {
-      const new_view = new this.ViewModel({
+      const new_view = new this.viewModel({
         mb_id: this.mb_id,
         view_ref_id: view_ref_id,
         view_group: group_type,
       });
 
-      const result = await new this.save();
+      const result = await new_view.save();
 
       //target items view sonini bitaga oshiramiz
       await this.modifyItemViewCounts(view_ref_id, group_type);

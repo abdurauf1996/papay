@@ -51,6 +51,7 @@ class Member {
     try {
       id = shapeIntoMongooseObjectId(id);
       console.log("member:::", member);
+
       if (member) {
         await this.viewChosenItemByMember(member, id, "member");
       }
