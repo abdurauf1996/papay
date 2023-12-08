@@ -87,9 +87,8 @@ class Member {
       if (!doesExist) {
         const result = await view.insertMemberView(view_ref_id, group_type);
         assert.ok(result, Definer.general_err1);
-
-        return true;
       }
+      return true;
     } catch (err) {
       throw err;
     }

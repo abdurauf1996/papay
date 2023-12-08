@@ -1,5 +1,5 @@
 const assert = require("assert");
-const Member = require("../models/Meber");
+const Member = require("../models/Member");
 
 let memberController = module.exports;
 

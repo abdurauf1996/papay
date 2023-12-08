@@ -3,7 +3,7 @@ const assert = require("assert");
 const { shapeIntoMongooseObjectId } = require("../lib/config");
 const Definer = require("../lib/mistake");
 const ProductModel = require("../schema/product.model");
-const Member = require("./Meber");
+const Member = require("./Member");
 
 class Product {
   constructor() {
@@ -51,7 +51,7 @@ class Product {
 
       if (member) {
         const member_obj = new Member();
-        member_obj.viewChosenItemByMember(member, id, "product");
+        await member_obj.viewChosenItemByMember(member, id, "product");
       }
 
       const result = await this.productModel
