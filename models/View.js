@@ -1,6 +1,8 @@
+const assert = require("assert");
+const MemberModel = require("../schema/member.model");
+const ProductModel = require("../schema/product.model");
 const ViewModel = require("../schema/view.model");
-const ProductModel = require("../schema/view.model");
-const MemberModel = require("../schema/product.model");
+const Definer = require("../lib/mistake");
 
 class View {
   constructor(mb_id) {

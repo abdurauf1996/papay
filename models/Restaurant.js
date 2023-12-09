@@ -50,8 +50,8 @@ class Restaurant {
       id = shapeIntoMongooseObjectId(id);
 
       if (member) {
-        const member_obj = new Member();
-        await member_obj.viewChosenItemByMember(member, id, "member");
+        const member_object = new Member();
+        await member_object.viewChosenItemByMember(member, id, "member");
       }
 
       const result = await this.memberModel
@@ -60,6 +60,7 @@ class Restaurant {
           mb_status: "ACTIVE",
         })
         .exec();
+
       assert.ok(result, Definer.general_err2);
 
       return result;

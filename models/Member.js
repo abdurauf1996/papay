@@ -82,7 +82,7 @@ class Member {
 
       //logged user has seen target before
       const doesExist = await view.checkViewExistence(view_ref_id);
-      console.log("doesExist", doesExist);
+      console.log("doesExist:::", doesExist);
 
       if (!doesExist) {
         const result = await view.insertMemberView(view_ref_id, group_type);

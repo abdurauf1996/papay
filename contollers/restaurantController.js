@@ -4,7 +4,6 @@ const Member = require("../models/Member");
 const Product = require("../models/Product");
 const assert = require("assert");
 const Restaurant = require("../models/Restaurant");
-const Restaurant = require("../models/Restaurant");
 
 let restaurantController = module.exports;
 
