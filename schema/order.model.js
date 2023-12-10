@@ -12,7 +12,7 @@ const orderSchema = new mongoose.Schema(
       default: "PAUSED",
       enum: {
         values: order_status_enums,
-        message: "{VALUE} is not among permitted values",
+        message: "{Value} is not among permitted value!",
       },
     },
     mb_id: { type: Schema.Types.ObjectId, ref: "Member", required: false },
