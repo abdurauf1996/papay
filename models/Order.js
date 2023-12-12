@@ -144,7 +144,7 @@ class Order {
           { runValidators: true, lean: true, returnDocument: "after" }
         )
         .exec();
-      console.log("result:::", result);
+      //console.log("result:::", result);
 
       assert.ok(result, Definer.order_err3);
 
