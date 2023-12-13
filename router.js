@@ -3,7 +3,9 @@ const router = express.Router();
 const memberController = require("./contollers/memberController");
 const productController = require("./contollers/productController");
 const restaurantController = require("./contollers/restaurantController");
+
 const orderController = require("./contollers/orderController");
+const followController = require("./contollers/followController");
 const communityController = require("./contollers/communityController");
 const uploader_community = require("./utils/upload-multer")("community");
 const uploader_member = require("./utils/upload-multer")("members");
@@ -96,6 +98,13 @@ router.get(
   "/community/single-article/:art_id",
   memberController.retrieveAuthMember,
   communityController.getChosenArticle
+);
+
+//Following realted routers
+router.post(
+  "/follow/subscribe",
+  memberController.retrieveAuthMember,
+  followController.subscribe
 );
 
 module.exports = router;
