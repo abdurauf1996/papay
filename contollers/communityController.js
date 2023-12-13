@@ -65,7 +65,21 @@ communityController.getArticles = async (req, res) => {
     res.json({ state: "success", data: result });
   } catch (err) {
     console.log(`ERROR, cont/getArticles, ${err.message}`);
+    res.json({ state: "fail", message: err.message });
+  }
+};
 
+communityController.getChosenArticle = async (req, res) => {
+  try {
+    const art_id = req.params.art_id;
+
+    console.log("GET: cont/getChosenArticle");
+    const comumunity = new Community();
+    const result = await comumunity.getChosenArticleData(req.member, art_id);
+
+    res.json({ state: "success", data: result });
+  } catch (err) {
+    console.log(`ERROR, cont/getChosenArticle, ${err.message}`);
     res.json({ state: "fail", message: err.message });
   }
 };
