@@ -4,6 +4,7 @@ const { shapeIntoMongooseObjectId } = require("../lib/config");
 const Definer = require("../lib/mistake");
 const FollowModel = require("../schema/follow.model");
 const MemberModel = require("../schema/member.model");
+const { unsubscribe } = require("diagnostics_channel");
 
 class Follow {
   constructor() {
@@ -13,6 +14,7 @@ class Follow {
   async subscribeData(member, data) {
     try {
       assert.ok(member._id !== data.mb_id, Definer.follow_err1);
+
       const subscriber_id = shapeIntoMongooseObjectId(member._id);
       const follow_id = shapeIntoMongooseObjectId(data.mb_id);
 
@@ -65,6 +67,26 @@ class Follow {
           )
           .exec();
       }
+      return true;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async unsubscribeData(member, data) {
+    try {
+      const subscriber_id = shapeIntoMongooseObjectId(member._id);
+      const follow_id = shapeIntoMongooseObjectId(data.mb_id);
+
+      const result = await this.followModel.findOneAndDelete({
+        follow_id: follow_id,
+        subscriber_id: subscriber_id,
+      });
+      assert.ok(result, Definer.general_err1);
+
+      await this.modifyMemberFollowCounts(follow_id, "subscriber_change", -1);
+      await this.modifyMemberFollowCounts(subscriber_id, "follow_change," - 1);
+      return true;
     } catch (err) {
       throw err;
     }
