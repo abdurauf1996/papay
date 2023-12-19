@@ -5,6 +5,7 @@ const assert = require("assert");
 const {
   shapeIntoMongooseObjectId,
   board_id_enum_list,
+  lookup_auth_member_liked,
 } = require("../lib/config");
 const Member = require("./Member");
 
@@ -56,6 +57,8 @@ class Community {
             },
           },
           { $unwind: "$member_data" },
+
+          lookup_auth_member_liked(auth_mb_id),
         ])
         .exec();
       assert.ok(mb_id, Definer.article_err3);
@@ -96,6 +99,8 @@ class Community {
             },
           },
           { $unwind: "$member_data" },
+
+          lookup_auth_member_liked(auth_mb_id),
         ])
         .exec();
 
