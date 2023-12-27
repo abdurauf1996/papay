@@ -31,7 +31,7 @@ class Community {
       return await article.save();
     } catch (mongo_err) {
       console.log(mongo_err);
-      throw new Error(Definer.auth_err1);
+      throw new Error(Definer.mongo_validation_err1);
     }
   }
 
@@ -61,7 +61,7 @@ class Community {
           lookup_auth_member_liked(auth_mb_id),
         ])
         .exec();
-      assert.ok(mb_id, Definer.article_err3);
+      assert.ok(result, Definer.article_err2);
 
       return result;
     } catch (err) {
@@ -111,7 +111,7 @@ class Community {
     }
   }
 
-  async getChosenArticleData(member, art_id) {
+  async getChosenArticlesData(member, art_id) {
     art_id = shapeIntoMongooseObjectId(art_id);
 
     // increase art_views when usen has not seen before
@@ -123,11 +123,11 @@ class Community {
     const result = await this.boArticleModel.findById({ _id: art_id }).exec();
     assert.ok(result, Definer.article_err3);
 
-    try {
-      return result;
-    } catch (err) {
-      throw err;
-    }
+    return result;
+  }
+  catch(err) {
+    throw err;
   }
 }
+
 module.exports = Community;

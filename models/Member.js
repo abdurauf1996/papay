@@ -5,30 +5,30 @@ const bcrypt = require("bcryptjs");
 const {
   shapeIntoMongooseObjectId,
   lookup_auth_member_following,
+  lookup_auth_member_liked,
 } = require("../lib/config");
 const View = require("./View");
 const Like = require("./Like");
-const { aggregate } = require("../schema/follow.model");
-const { lookup } = require("dns");
 
 class Member {
   constructor() {
     this.memberModel = MemberModel;
   }
+
   async signupData(input) {
     try {
       const salt = await bcrypt.genSalt();
       input.mb_password = await bcrypt.hash(input.mb_password, salt);
       const new_member = new this.memberModel(input);
-      let result;
 
+      let result;
       try {
         result = await new_member.save();
-      } catch (mongo_err) {
+      } catch (mango_err) {
         console.log(mongo_err);
-        throw new Error(Definer.auth_err2);
+        throw new Error(Definer.mongo_validation_err1);
       }
-
+      //   console.log(result);
       result.mb_password = "";
       return result;
     } catch (err) {
@@ -41,6 +41,7 @@ class Member {
       const member = await this.memberModel
         .findOne({ mb_nick: input.mb_nick }, { mb_nick: 1, mb_password: 1 })
         .exec();
+
       assert.ok(member, Definer.auth_err3);
 
       const isMatch = await bcrypt.compare(
@@ -48,14 +49,16 @@ class Member {
         member.mb_password
       );
       assert.ok(isMatch, Definer.auth_err4);
+
       return await this.memberModel.findOne({ mb_nick: input.mb_nick }).exec();
     } catch (err) {
       throw err;
     }
   }
+
   async getChosenMemberData(member, id) {
     try {
-      const auth_mb_id = shapeIntoMongooseObjectId(member?._id);
+      const auth_member = shapeIntoMongooseObjectId(member?._id);
       id = shapeIntoMongooseObjectId(id);
       console.log("member:::", member);
 
@@ -65,11 +68,14 @@ class Member {
       ];
 
       if (member) {
+        // condition if not seem before
         await this.viewChosenItemByMember(member, id, "member");
-        aggregateQuery.push(lookup_auth_member_liked(auth_mb_id));
-        // todo: check auth member liked the chosen target
+
+        //  check auth member liked the chosen target
+        aggregateQuery.push(lookup_auth_member_liked(auth_member));
+
         aggregateQuery.push(
-          lookup_auth_member_following(auth_mb_id, "members")
+          lookup_auth_member_following(auth_member, "members")
         );
       }
 
@@ -81,22 +87,20 @@ class Member {
       throw err;
     }
   }
+
   async viewChosenItemByMember(member, view_ref_id, group_type) {
     try {
       view_ref_id = shapeIntoMongooseObjectId(view_ref_id);
       const mb_id = shapeIntoMongooseObjectId(member._id);
+
       const view = new View(mb_id);
-
-      //validation needed
-
       const isValid = await view.validateChosenTarget(view_ref_id, group_type);
       console.log("isValid:::", isValid);
-
       assert.ok(isValid, Definer.general_err2);
 
-      //logged user has seen target before
-      const doesExist = await view.checkViewExistence(view_ref_id);
-      console.log("doesExist:::", doesExist);
+      // logged user has seen target before
+      const doesExist = await view.checkViewExistance(view_ref_id);
+      console.log("doesExist:", doesExist);
 
       if (!doesExist) {
         const result = await view.insertMemberView(view_ref_id, group_type);
@@ -115,11 +119,12 @@ class Member {
 
       const like = new Like(mb_id);
       const isValid = await like.validateTargetItem(like_ref_id, group_type);
-
+      // console.log("isValid:::", isValid);
       assert.ok(isValid, Definer.general_err2);
 
+      // doesExist
       const doesExist = await like.checkLikeExistence(like_ref_id);
-      console.log("doesExist::", doesExist);
+      console.log("doesExist:::", doesExist);
 
       let data = doesExist
         ? await like.removeMemberLike(like_ref_id, group_type)
@@ -132,10 +137,11 @@ class Member {
         like_status: doesExist ? 0 : 1,
       };
 
-      return true;
+      return result;
     } catch (err) {
       throw err;
     }
   }
 }
+
 module.exports = Member;

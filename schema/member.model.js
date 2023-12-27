@@ -45,7 +45,7 @@ const meberSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
-    mb_description: {
+    mb_discription: {
       type: String,
       required: false,
     },
@@ -56,7 +56,7 @@ const meberSchema = new mongoose.Schema(
     },
     mb_point: {
       type: Number,
-      required: false,
+      require: false,
       default: 0,
     },
 

@@ -75,7 +75,7 @@ communityController.getChosenArticle = async (req, res) => {
 
     console.log("GET: cont/getChosenArticle");
     const comumunity = new Community();
-    const result = await comumunity.getChosenArticleData(req.member, art_id);
+    const result = await comumunity.getChosenArticlesData(req.member, art_id);
 
     res.json({ state: "success", data: result });
   } catch (err) {

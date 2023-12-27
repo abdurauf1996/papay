@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const router = require("./router.js");
 const router_bssr = require("./router_bssr.js");
+const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
 let session = require("express-session");
@@ -12,11 +13,17 @@ const store = new MongoDBStore({
   collection: "sessions",
 });
 //1KIRISH CODE
-
 app.use(express.static("public"));
+app.use("/uploads", express.static(__dirname + "/uploads"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(
+  cors({
+    credentials: true,
+    origin: true,
+  })
+);
 
 //2:  Sesssion CODE
 app.use(

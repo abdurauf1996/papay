@@ -1,12 +1,12 @@
 const MemberModel = require("../schema/member.model");
 const ProductModel = require("../schema/product.model");
-const LikekeModel = require("../schema/like.model");
+const LikeModel = require("../schema/like.model");
 const BoArticleModel = require("../schema/bo_article.model");
 const Definer = require("../lib/mistake");
 
 class Like {
   constructor(mb_id) {
-    this.likeModel = LikekeModel;
+    this.likeModel = LikeModel;
     this.productModel = ProductModel;
     this.memberModel = MemberModel;
     this.boArticleModel = BoArticleModel;
@@ -18,20 +18,20 @@ class Like {
       let result;
       switch (group_type) {
         case "member":
-          await this.memberModel
+          result = await this.memberModel
             .findOne({ _id: id, mb_status: "ACTIVE" })
             .exec();
           break;
 
         case "product":
-          await this.productModel
+          result = await this.productModel
             .findOne({ _id: id, product_status: "PROCESS" })
             .exec();
 
           break;
         case "community":
         default:
-          await this.boArticleModel
+          result = await this.boArticleModel
             .findOne({ _id: id, art_status: "active" })
             .exec();
 
@@ -60,10 +60,11 @@ class Like {
     try {
       const result = await this.likeModel
         .findByIdAndDelete({
-          like_ref_id: like_ref_id,
           mb_id: this.mb_id,
+          like_ref_id: like_ref_id,
         })
         .exec();
+
       await this.modifyItemLikeCounts(like_ref_id, group_type, -1);
       return result;
     } catch (err) {
@@ -84,6 +85,7 @@ class Like {
       await this.modifyItemLikeCounts(like_ref_id, group_type, 1);
       return result;
     } catch (err) {
+      console.log("err:::", err);
       throw new Error(Definer.mongo_validation_err1);
     }
   }
@@ -103,7 +105,7 @@ class Like {
           break;
 
         case "product":
-          result = await this.productModel
+          await this.productModel
             .findByIdAndUpdate(
               {
                 _id: like_ref_id,
@@ -114,8 +116,7 @@ class Like {
 
           break;
         case "community":
-        default:
-          result = await this.boArticleModel
+          await this.boArticleModel
             .findByIdAndUpdate(
               {
                 _id: like_ref_id,
